@@ -1,0 +1,10 @@
+const String loginPage = "/";
+const String registerPage = "/register";
+const String homePage = "/home";
+const String settingsPage = "/settings";
+const String editProfilePage = "/editProfile";
+const String myAdsPage = "/myAds";
+const String editAdPage = "/editAd";
+const String productDetailPage = "/productDetail";
+const String createAdPage = "/createAd";
+const String imageViewerPage = "/imageViewer";
