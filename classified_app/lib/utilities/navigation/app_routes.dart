@@ -1,4 +1,4 @@
-import 'package:classified_app/navigation/const_routes.dart';
+import 'package:classified_app/utilities/navigation/const_routes.dart';
 import 'package:classified_app/screens/create_ad.dart';
 import 'package:classified_app/screens/edit_ad.dart';
 import 'package:classified_app/screens/edit_profile.dart';

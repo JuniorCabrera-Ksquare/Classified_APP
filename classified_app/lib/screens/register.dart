@@ -1,4 +1,4 @@
-import 'package:classified_app/navigation/const_routes.dart';
+import 'package:classified_app/utilities/navigation/const_routes.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatelessWidget {

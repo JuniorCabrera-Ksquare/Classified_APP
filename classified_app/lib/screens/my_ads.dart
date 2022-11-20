@@ -1,6 +1,6 @@
-import 'package:classified_app/custom_widgets/custom2.dart';
+import 'package:classified_app/screens/custom_widgets/custom2.dart';
 import 'package:classified_app/data/ads_data.dart';
-import 'package:classified_app/navigation/const_routes.dart';
+import 'package:classified_app/utilities/navigation/const_routes.dart';
 import 'package:flutter/material.dart';
 
 class MyAdsScreen extends StatelessWidget {
