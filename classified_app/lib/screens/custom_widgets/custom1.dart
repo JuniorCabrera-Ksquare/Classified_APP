@@ -24,6 +24,9 @@ class Custom1 extends StatelessWidget {
             width: double.infinity,
             child: Image.network(
               image,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset("assets/noimg.jpg");
+              },
               fit: BoxFit.cover,
             ),
           ),

@@ -1,8 +1,23 @@
+import 'package:classified_app/models/user_model.dart';
+import 'package:classified_app/services/auth_service.dart';
+import 'package:classified_app/utilities/constants.dart';
 import 'package:classified_app/utilities/navigation/const_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final RoundedLoadingButtonController _btnController =
+      RoundedLoadingButtonController();
+  final TextEditingController _emailCtrl = TextEditingController();
+  final TextEditingController _passwordCtrl = TextEditingController();
+  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -28,27 +43,52 @@ class LoginScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: 12),
-                    const TextField(
-                        style: TextStyle(fontSize: 18),
-                        decoration: InputDecoration(
+                    TextField(
+                        controller: _emailCtrl,
+                        style: const TextStyle(fontSize: 18),
+                        decoration: const InputDecoration(
                             labelText: "Email Address",
                             border: OutlineInputBorder())),
                     const SizedBox(height: 8),
-                    const TextField(
-                        style: TextStyle(fontSize: 18),
+                    TextField(
+                        controller: _passwordCtrl,
+                        obscureText: _isObscure,
+                        style: const TextStyle(fontSize: 18),
                         decoration: InputDecoration(
-                            labelText: "Password",
-                            border: OutlineInputBorder())),
+                          labelText: "Password",
+                          border: const OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                              onPressed: (() {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              }),
+                              icon: Icon(_isObscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off)),
+                        )),
                     const SizedBox(height: 12),
                     SizedBox(
-                        height: 60,
                         width: double.infinity,
-                        child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushReplacementNamed(context, homePage);
+                        child: RoundedLoadingButton(
+                            onPressed: () async {
+                              UserModel user = UserModel(
+                                  email: _emailCtrl.text,
+                                  password: _passwordCtrl.text);
+                              await AuthService().userLogin(context, user)
+                                  ? Navigator.pushReplacementNamed(
+                                      context, homePage)
+                                  : _btnController.error();
                             },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xfff25723)),
+                            color: Constants().appColor,
+                            borderRadius: 5,
+                            controller: _btnController,
+                            resetDuration: const Duration(milliseconds: 3600),
+                            resetAfterDuration: true,
+                            errorColor: Constants().appColor,
+                            successColor: Constants().appColor,
+                            height: 60,
+                            width: 400,
                             child: const Text(
                               "Login",
                               style: TextStyle(
@@ -59,12 +99,12 @@ class LoginScreen extends StatelessWidget {
                         onPressed: () {
                           Navigator.pushReplacementNamed(context, registerPage);
                         },
-                        child: const Text(
+                        child: Text(
                           "Don't have any account?",
                           style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xfff25723)),
+                              color: Constants().appColor),
                         ))
                   ],
                 ),
