@@ -7,9 +7,14 @@ import 'package:classified_app/utilities/constants.dart';
 import 'package:classified_app/utilities/navigation/const_routes.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +23,9 @@ class HomeScreen extends StatelessWidget {
         actions: <Widget>[
           TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, settingsPage);
+                Navigator.pushNamed(context, settingsPage).then((value) {
+                  setState(() {});
+                });
               },
               child: FutureBuilder(
                 future: ProfileService().readProfile(context),

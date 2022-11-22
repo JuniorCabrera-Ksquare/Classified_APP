@@ -1,7 +1,10 @@
+import 'package:classified_app/models/ads_model.dart';
+import 'package:classified_app/services/ads_service.dart';
+import 'package:classified_app/utilities/constants.dart';
 import 'package:flutter/material.dart';
 
 class EditAdScreen extends StatelessWidget {
-  final dynamic data;
+  final AdsModel data;
   EditAdScreen({super.key, required this.data});
   final TextEditingController _titleCtrl = TextEditingController();
   final TextEditingController _priceCtrl = TextEditingController();
@@ -10,15 +13,16 @@ class EditAdScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _titleCtrl.text = data["title"];
-    _priceCtrl.text = data["price"].toString();
-    _mobileCtrl.text = data["mobile"];
-    _descriptionCtrl.text = data["description"];
+    _titleCtrl.text = data.title!;
+    _priceCtrl.text = data.price.toString();
+    _mobileCtrl.text = data.mobile!;
+    _descriptionCtrl.text = data.description!;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit Ad"),
       ),
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       body: Center(
           child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -52,7 +56,7 @@ class EditAdScreen extends StatelessWidget {
               width: double.infinity,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: data["images"].length,
+                itemCount: data.images!.length,
                 itemBuilder: ((context, index) {
                   return Container(
                     decoration: BoxDecoration(
@@ -65,7 +69,7 @@ class EditAdScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(4),
                     width: 100,
                     child: Image.network(
-                      data["images"][index],
+                      data.images![index],
                       fit: BoxFit.cover,
                     ),
                   );
@@ -102,11 +106,21 @@ class EditAdScreen extends StatelessWidget {
                 height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
+                    onPressed: () async {
+                      AdsModel ad = AdsModel(
+                          id: data.id,
+                          title: _titleCtrl.text,
+                          description: _descriptionCtrl.text,
+                          price: double.parse(_priceCtrl.text),
+                          mobile: _mobileCtrl.text,
+                          images: data.images);
+                      //print(ad);
+                      await AdsService().updateMyAd(context, ad)
+                          ? Navigator.pop(context)
+                          : null;
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xfff25723)),
+                        backgroundColor: Constants().appColor),
                     child: const Text(
                       "Submit Ad",
                       style:

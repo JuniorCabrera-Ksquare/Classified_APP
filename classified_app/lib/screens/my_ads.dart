@@ -1,44 +1,57 @@
+import 'package:classified_app/models/ads_model.dart';
 import 'package:classified_app/screens/custom_widgets/custom2.dart';
-import 'package:classified_app/data/ads_data.dart';
+import 'package:classified_app/services/ads_service.dart';
+import 'package:classified_app/utilities/constants.dart';
 import 'package:classified_app/utilities/navigation/const_routes.dart';
 import 'package:flutter/material.dart';
 
-class MyAdsScreen extends StatelessWidget {
+class MyAdsScreen extends StatefulWidget {
   const MyAdsScreen({super.key});
 
-  _obtainAds() {
-    List result = [];
-    for (var element in ads) {
-      if (element["createdBy"] == "Abi") {
-        result.add(element);
-      }
-    }
-    return result;
-  }
+  @override
+  State<MyAdsScreen> createState() => _MyAdsScreenState();
+}
 
+class _MyAdsScreenState extends State<MyAdsScreen> {
   @override
   Widget build(BuildContext context) {
-    List userAds = _obtainAds();
     return Scaffold(
         appBar: AppBar(
           title: const Text("My Ads"),
         ),
         backgroundColor: Colors.white,
-        body: ListView.builder(
-            itemCount: userAds.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, editAdPage,
-                      arguments: userAds[index]);
-                },
-                child: Custom2(
-                  name: userAds[index]["title"],
-                  price: userAds[index]["price"],
-                  created: userAds[index]["createdAt"],
-                  image: userAds[index]["images"][0],
+        body: FutureBuilder(
+          future: AdsService().fetcMyAds(context),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.hasData) {
+              List<AdsModel> userAds = snapshot.data;
+              return ListView.builder(
+                  itemCount: userAds.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, editAdPage,
+                                arguments: userAds[index])
+                            .then((value) {
+                          setState(() {});
+                        });
+                      },
+                      child: Custom2(
+                        name: userAds[index].title!,
+                        price: userAds[index].price!,
+                        created: userAds[index].created!,
+                        image: userAds[index].images![0],
+                      ),
+                    );
+                  });
+            } else {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Constants().appColor,
                 ),
               );
-            }));
+            }
+          },
+        ));
   }
 }

@@ -71,7 +71,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         TextButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, editProfilePage);
+                              Navigator.pushNamed(context, editProfilePage)
+                                  .then((value) {
+                                setState(() {});
+                              });
                             },
                             child: Text(
                               "Edit",

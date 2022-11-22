@@ -100,8 +100,8 @@ class ProductDetailScreen extends StatelessWidget {
                 height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: () {
-                      _openURL(data.mobile!);
+                    onPressed: () async {
+                      await _openURL("tel:${data.mobile!}");
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Constants().appColor),

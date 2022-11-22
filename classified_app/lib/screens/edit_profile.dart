@@ -18,6 +18,7 @@ class EditProfileScreen extends StatelessWidget {
         title: const Text("Edit Profile"),
       ),
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       body: FutureBuilder(
         future: ProfileService().readProfile(context),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {

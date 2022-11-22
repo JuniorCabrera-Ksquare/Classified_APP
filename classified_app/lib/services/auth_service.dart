@@ -34,7 +34,6 @@ class AuthService {
           body: jsonEncode(modelObj));
       modelObj = jsonDecode(response.body);
       if (modelObj["status"]) {
-        storage.write(key: "userID", value: modelObj["data"]["user"]["_id"]);
         storage.write(key: "token", value: modelObj["data"]["token"]);
       } else {
         StatusManager()
