@@ -1,9 +1,11 @@
+import 'package:classified_app/models/ads_model.dart';
+import 'package:classified_app/utilities/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:classified_app/utilities/navigation/const_routes.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  final dynamic data;
+  final AdsModel data;
   const ProductDetailScreen({super.key, required this.data});
 
   _openURL(url) async {
@@ -27,26 +29,30 @@ class ProductDetailScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 12),
             Text(
-              data["title"],
+              data.title!,
               style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
-              "\$${data["price"]}",
-              style: const TextStyle(
+              "\$${data.price!}",
+              style: TextStyle(
                   fontSize: 19,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xfff25723)),
+                  color: Constants().appColor),
             ),
             const SizedBox(height: 12),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, imageViewerPage, arguments: data);
+                Navigator.pushNamed(context, imageViewerPage,
+                    arguments: data.images);
               },
               child: Image.network(
-                data["images"][0],
+                data.images![0],
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset("assets/noimg.jpg");
+                },
                 fit: BoxFit.cover,
-                height: 300,
+                height: 380,
                 width: double.infinity,
               ),
             ),
@@ -62,7 +68,7 @@ class ProductDetailScreen extends StatelessWidget {
                     color: Color.fromARGB(255, 58, 58, 58),
                   )),
                   TextSpan(
-                      text: data["createdBy"],
+                      text: data.author,
                       style: const TextStyle(
                           fontSize: 16, color: Color.fromARGB(255, 58, 58, 58)))
                 ])),
@@ -76,7 +82,7 @@ class ProductDetailScreen extends StatelessWidget {
                     color: Color.fromARGB(255, 58, 58, 58),
                   )),
                   TextSpan(
-                      text: data["createdAt"],
+                      text: data.created,
                       style: const TextStyle(
                           fontSize: 16, color: Color.fromARGB(255, 58, 58, 58)))
                 ])),
@@ -84,7 +90,7 @@ class ProductDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              data["description"],
+              data.description!,
               style: const TextStyle(
                   fontSize: 18, color: Color.fromARGB(255, 44, 44, 44)),
               textAlign: TextAlign.justify,
@@ -95,10 +101,10 @@ class ProductDetailScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: () {
-                      _openURL('tel:+97798345348734');
+                      _openURL(data.mobile!);
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xfff25723)),
+                        backgroundColor: Constants().appColor),
                     child: const Text(
                       "Contact Seller",
                       style:

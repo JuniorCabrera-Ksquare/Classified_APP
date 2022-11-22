@@ -19,11 +19,31 @@ class ProfileService {
       });
       modelObj = jsonDecode(response.body);
       UserModel user = UserModel.fromJson(modelObj["data"]);
-      StatusManager()
-          .manageStatus(context, modelObj["status"], modelObj["message"]);
       return user;
     } catch (e) {
       StatusManager().manageStatus(context, null, null);
+    }
+  }
+
+  Future updateProfile(context, UserModel userModel) async {
+    FlutterSecureStorage storage = const FlutterSecureStorage();
+    dynamic token = await storage.read(key: 'token');
+    Uri url = Uri.parse(Constants().serverUrl + Constants().userUpdateEP);
+    Map<String, dynamic> modelObj = userModel.toJson();
+    try {
+      Response response = await http.patch(url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonEncode(modelObj));
+      modelObj = jsonDecode(response.body);
+      StatusManager()
+          .manageStatus(context, modelObj["status"], modelObj["message"]);
+      return modelObj["status"];
+    } catch (e) {
+      StatusManager().manageStatus(context, null, null);
+      return false;
     }
   }
 }

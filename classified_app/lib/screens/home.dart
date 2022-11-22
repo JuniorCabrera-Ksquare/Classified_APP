@@ -1,14 +1,13 @@
 import 'package:classified_app/models/ads_model.dart';
 import 'package:classified_app/models/user_model.dart';
 import 'package:classified_app/screens/custom_widgets/custom1.dart';
-import 'package:classified_app/data/ads_data.dart';
 import 'package:classified_app/services/ads_service.dart';
 import 'package:classified_app/services/profile_service.dart';
+import 'package:classified_app/utilities/constants.dart';
 import 'package:classified_app/utilities/navigation/const_routes.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
-  final dynamic _data = ads;
   const HomeScreen({super.key});
 
   @override
@@ -64,8 +63,10 @@ class HomeScreen extends StatelessWidget {
               }),
             );
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: CircularProgressIndicator(
+                color: Constants().appColor,
+              ),
             );
           }
         },
@@ -74,7 +75,7 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           Navigator.pushNamed(context, createAdPage);
         },
-        backgroundColor: const Color(0xfff25723),
+        backgroundColor: Constants().appColor,
         child: const Icon(Icons.add_a_photo),
       ),
     );

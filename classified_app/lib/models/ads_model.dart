@@ -4,9 +4,17 @@ class AdsModel {
   num? price;
   String? mobile;
   List<dynamic>? images;
+  String? author;
+  String? created;
 
   AdsModel(
-      {this.title, this.description, this.price, this.mobile, this.images});
+      {this.title,
+      this.description,
+      this.price,
+      this.mobile,
+      this.images,
+      this.author,
+      this.created});
 
   AdsModel.fromJson(Map<String, dynamic> json) {
     title = json['title'];
@@ -14,6 +22,8 @@ class AdsModel {
     price = json['price'];
     mobile = json['mobile'];
     images = json['images'] ?? ["assets/noimg.jpg"].cast<String>();
+    author = json['authorName'];
+    created = json['createdAt'];
   }
 
   Map<String, dynamic> toJson() {
@@ -23,6 +33,8 @@ class AdsModel {
     data['price'] = price;
     data['mobile'] = mobile;
     data['images'] = images;
+    data['authorName'] = author;
+    data['createdAt'] = created;
     return data;
   }
 }

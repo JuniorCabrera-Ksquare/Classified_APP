@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    final args = settings.arguments;
+    final dynamic args = settings.arguments;
 
     switch (settings.name) {
       case loginPage:

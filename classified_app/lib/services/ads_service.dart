@@ -15,8 +15,6 @@ class AdsService {
           await http.get(url, headers: {'Content-Type': 'application/json'});
       modelObj = jsonDecode(response.body);
       var adsData = modelObj["data"];
-      StatusManager()
-          .manageStatus(context, modelObj["status"], modelObj["message"]);
       ads = adsData.map<AdsModel>((ad) => AdsModel.fromJson(ad)).toList();
       return ads;
     } catch (e) {

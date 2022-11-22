@@ -1,16 +1,15 @@
-import 'package:classified_app/data/ads_data.dart';
+import 'package:classified_app/models/user_model.dart';
+import 'package:classified_app/services/profile_service.dart';
+import 'package:classified_app/utilities/constants.dart';
 import 'package:classified_app/utilities/navigation/const_routes.dart';
 import 'package:flutter/material.dart';
 
 class EditProfileScreen extends StatelessWidget {
   EditProfileScreen({super.key});
 
-  final TextEditingController _nameCtrl =
-      TextEditingController(text: users[0]["name"]);
-  final TextEditingController _emailCtrl =
-      TextEditingController(text: users[0]["email"]);
-  final TextEditingController _mobileCtrl =
-      TextEditingController(text: users[0]["mobile"]);
+  final TextEditingController _nameCtrl = TextEditingController();
+  final TextEditingController _emailCtrl = TextEditingController();
+  final TextEditingController _mobileCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -19,74 +18,101 @@ class EditProfileScreen extends StatelessWidget {
         title: const Text("Edit Profile"),
       ),
       backgroundColor: Colors.white,
-      body: Center(
-          child: Column(
-        children: [
-          const SizedBox(height: 18),
-          const CircleAvatar(
-            backgroundImage: AssetImage("assets/avatar.jpg"),
-            radius: 60,
-          ),
-          const SizedBox(height: 8),
-          Container(
-            height: 400,
-            width: double.infinity,
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  TextField(
-                      controller: _nameCtrl,
-                      style: const TextStyle(fontSize: 18, height: 1),
-                      decoration:
-                          const InputDecoration(border: OutlineInputBorder())),
-                  const SizedBox(height: 8),
-                  TextField(
-                      controller: _emailCtrl,
-                      style: const TextStyle(fontSize: 18, height: 1),
-                      decoration:
-                          const InputDecoration(border: OutlineInputBorder())),
-                  const SizedBox(height: 8),
-                  TextField(
-                      controller: _mobileCtrl,
-                      style: const TextStyle(fontSize: 18, height: 1),
-                      decoration:
-                          const InputDecoration(border: OutlineInputBorder())),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                      height: 50,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xfff25723)),
-                          child: const Text(
-                            "Update Profile",
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.w600),
-                          ))),
-                  const SizedBox(height: 10),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, loginPage, (route) => false);
-                      },
-                      child: const Text(
-                        "Logout",
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xfff25723)),
-                      ))
-                ],
+      body: FutureBuilder(
+        future: ProfileService().readProfile(context),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.hasData) {
+            UserModel user = snapshot.data;
+            _nameCtrl.text = user.name!;
+            _emailCtrl.text = user.email!;
+            _mobileCtrl.text = user.mobile!;
+            return Center(
+                child: Column(
+              children: [
+                const SizedBox(height: 18),
+                CircleAvatar(
+                  backgroundImage: NetworkImage(user.imgURL!),
+                  radius: 60,
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  height: 400,
+                  width: double.infinity,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        TextField(
+                            controller: _nameCtrl,
+                            style: const TextStyle(fontSize: 18, height: 1),
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder())),
+                        const SizedBox(height: 8),
+                        TextField(
+                            controller: _emailCtrl,
+                            style: const TextStyle(fontSize: 18, height: 1),
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder())),
+                        const SizedBox(height: 8),
+                        TextField(
+                            controller: _mobileCtrl,
+                            style: const TextStyle(fontSize: 18, height: 1),
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder())),
+                        const SizedBox(height: 24),
+                        SizedBox(
+                            height: 50,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                                onPressed: () async {
+                                  var img = user.imgURL;
+                                  user = UserModel(
+                                      name: _nameCtrl.text,
+                                      email: _emailCtrl.text,
+                                      mobile: _mobileCtrl.text,
+                                      imgURL: img);
+                                  if (await ProfileService()
+                                      .updateProfile(context, user)) {
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Constants().appColor),
+                                child: const Text(
+                                  "Update Profile",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600),
+                                ))),
+                        const SizedBox(height: 10),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, loginPage, (route) => false);
+                            },
+                            child: Text(
+                              "Logout",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Constants().appColor),
+                            ))
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ));
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                color: Constants().appColor,
               ),
-            ),
-          )
-        ],
-      )),
+            );
+          }
+        },
+      ),
     );
   }
 }

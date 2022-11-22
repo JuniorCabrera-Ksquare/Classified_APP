@@ -22,16 +22,19 @@ class ImageViewerScreen extends StatelessWidget {
       body: Center(
         child: CarouselSlider.builder(
           options: CarouselOptions(
-            height: 400,
+            height: 500,
             viewportFraction: 1,
           ),
-          itemCount: data["images"].length,
+          itemCount: data.length,
           itemBuilder: (context, itemIndex, pageViewIndex) {
             return Container(
               width: double.infinity,
               color: Colors.grey,
               child: Image.network(
-                data["images"][itemIndex],
+                data[itemIndex],
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset("assets/noimg.jpg");
+                },
                 fit: BoxFit.cover,
               ),
             );
