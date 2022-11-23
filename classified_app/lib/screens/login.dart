@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Constants().appColor,
                             borderRadius: 5,
                             controller: _btnController,
-                            resetDuration: const Duration(milliseconds: 3600),
+                            resetDuration: const Duration(milliseconds: 5600),
                             resetAfterDuration: true,
                             errorColor: Constants().appColor,
                             successColor: Constants().appColor,

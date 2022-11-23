@@ -66,4 +66,26 @@ class AdsService {
       return false;
     }
   }
+
+  Future createMyAd(context, AdsModel adsModel) async {
+    FlutterSecureStorage storage = const FlutterSecureStorage();
+    dynamic token = await storage.read(key: 'token');
+    Uri url = Uri.parse(Constants().serverUrl + Constants().adsEP);
+    Map<String, dynamic> modelObj = adsModel.toJson();
+    try {
+      Response response = await http.post(url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonEncode(modelObj));
+      modelObj = jsonDecode(response.body);
+      StatusManager()
+          .manageStatus(context, modelObj["status"], modelObj["message"]);
+      return modelObj["status"];
+    } catch (e) {
+      StatusManager().manageStatus(context, null, null);
+      return false;
+    }
+  }
 }
