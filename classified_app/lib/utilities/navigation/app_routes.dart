@@ -25,7 +25,7 @@ class RouteGenerator {
       case settingsPage:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case editProfilePage:
-        return MaterialPageRoute(builder: (_) => EditProfileScreen());
+        return MaterialPageRoute(builder: (_) => const EditProfileScreen());
       case myAdsPage:
         return MaterialPageRoute(builder: (_) => const MyAdsScreen());
       case editAdPage:

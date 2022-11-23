@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:classified_app/models/ads_model.dart';
 import 'package:classified_app/utilities/constants.dart';
 import 'package:classified_app/utilities/manager/status_manager.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';

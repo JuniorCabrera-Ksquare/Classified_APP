@@ -1,6 +1,7 @@
 import 'package:classified_app/models/user_model.dart';
 import 'package:classified_app/services/auth_service.dart';
 import 'package:classified_app/utilities/constants.dart';
+import 'package:classified_app/utilities/manager/alert_manager.dart';
 import 'package:classified_app/utilities/navigation/const_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -72,13 +73,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: double.infinity,
                         child: RoundedLoadingButton(
                             onPressed: () async {
-                              UserModel user = UserModel(
-                                  email: _emailCtrl.text,
-                                  password: _passwordCtrl.text);
-                              await AuthService().userLogin(context, user)
-                                  ? Navigator.pushReplacementNamed(
-                                      context, homePage)
-                                  : _btnController.error();
+                              if (_emailCtrl.text.isEmpty ||
+                                  _passwordCtrl.text.isEmpty) {
+                                AlertManager().displaySnackbar(context,
+                                    "Please, fill out all the fields.");
+                              } else {
+                                UserModel user = UserModel(
+                                    email: _emailCtrl.text,
+                                    password: _passwordCtrl.text);
+                                await AuthService().userLogin(context, user)
+                                    ? Navigator.pushReplacementNamed(
+                                        context, homePage)
+                                    : _btnController.error();
+                              }
                             },
                             color: Constants().appColor,
                             borderRadius: 5,

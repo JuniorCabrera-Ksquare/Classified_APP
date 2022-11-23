@@ -1,15 +1,26 @@
 import 'package:classified_app/models/user_model.dart';
+import 'package:classified_app/services/picture_service.dart';
 import 'package:classified_app/services/profile_service.dart';
 import 'package:classified_app/utilities/constants.dart';
+import 'package:classified_app/utilities/manager/alert_manager.dart';
 import 'package:classified_app/utilities/navigation/const_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
-class EditProfileScreen extends StatelessWidget {
-  EditProfileScreen({super.key});
+class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({super.key});
 
+  @override
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
+}
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _nameCtrl = TextEditingController();
   final TextEditingController _emailCtrl = TextEditingController();
   final TextEditingController _mobileCtrl = TextEditingController();
+  bool _loading = false;
+  bool _picked = false;
+  String _imgPath = "";
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +38,38 @@ class EditProfileScreen extends StatelessWidget {
             _nameCtrl.text = user.name!;
             _emailCtrl.text = user.email!;
             _mobileCtrl.text = user.mobile!;
+            _picked ? user.imgURL = _imgPath : null;
+            _picked ? _loading = false : null;
             return Center(
                 child: Column(
               children: [
                 const SizedBox(height: 18),
-                CircleAvatar(
-                  backgroundImage: NetworkImage(user.imgURL!),
-                  radius: 60,
+                GestureDetector(
+                  onTap: () async {
+                    XFile? file = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
+                    if (file != null) {
+                      setState(() {
+                        _loading = true;
+                      });
+                      _imgPath =
+                          await PictureService().uploadPicture(file.path);
+                      setState(() {
+                        _picked = true;
+                      });
+                    }
+                  },
+                  child: Visibility(
+                    visible: _loading,
+                    replacement: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      backgroundImage: NetworkImage(user.imgURL!),
+                      radius: 60,
+                    ),
+                    child: CircularProgressIndicator(
+                      color: Constants().appColor,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Container(
@@ -67,15 +103,22 @@ class EditProfileScreen extends StatelessWidget {
                             width: double.infinity,
                             child: ElevatedButton(
                                 onPressed: () async {
-                                  var img = user.imgURL;
-                                  user = UserModel(
-                                      name: _nameCtrl.text,
-                                      email: _emailCtrl.text,
-                                      mobile: _mobileCtrl.text,
-                                      imgURL: img);
-                                  if (await ProfileService()
-                                      .updateProfile(context, user)) {
-                                    Navigator.pop(context);
+                                  if (_nameCtrl.text.isEmpty ||
+                                      _emailCtrl.text.isEmpty ||
+                                      _mobileCtrl.text.isEmpty) {
+                                    AlertManager().displaySnackbar(context,
+                                        "Please, fill out all the fields.");
+                                  } else {
+                                    String? img = user.imgURL;
+                                    user = UserModel(
+                                        name: _nameCtrl.text,
+                                        email: _emailCtrl.text,
+                                        mobile: _mobileCtrl.text,
+                                        imgURL: img);
+                                    if (await ProfileService()
+                                        .updateProfile(context, user)) {
+                                      Navigator.pop(context);
+                                    }
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

@@ -1,6 +1,7 @@
 import 'package:classified_app/models/user_model.dart';
 import 'package:classified_app/services/auth_service.dart';
 import 'package:classified_app/utilities/constants.dart';
+import 'package:classified_app/utilities/manager/alert_manager.dart';
 import 'package:classified_app/utilities/navigation/const_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -85,18 +86,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(height: 12),
                     RoundedLoadingButton(
                         onPressed: () async {
-                          UserModel user = UserModel(
-                              name: _nameCtrl.text,
-                              email: _emailCtrl.text,
-                              password: _passwordCtrl.text,
-                              mobile: _mobileCtrl.text);
-                          if (await AuthService().userRegister(context, user)) {
-                            await AuthService().userLogin(context, user)
-                                ? Navigator.pushReplacementNamed(
-                                    context, homePage)
-                                : _btnController.error();
+                          if (_nameCtrl.text.isEmpty ||
+                              _emailCtrl.text.isEmpty ||
+                              _passwordCtrl.text.isEmpty ||
+                              _mobileCtrl.text.isEmpty) {
+                            AlertManager().displaySnackbar(
+                                context, "Please, fill out all the fields.");
                           } else {
-                            _btnController.error();
+                            UserModel user = UserModel(
+                                name: _nameCtrl.text,
+                                email: _emailCtrl.text,
+                                password: _passwordCtrl.text,
+                                mobile: _mobileCtrl.text);
+                            if (await AuthService()
+                                .userRegister(context, user)) {
+                              await AuthService().userLogin(context, user)
+                                  ? Navigator.pushReplacementNamed(
+                                      context, homePage)
+                                  : _btnController.error();
+                            } else {
+                              _btnController.error();
+                            }
                           }
                         },
                         width: 400,
