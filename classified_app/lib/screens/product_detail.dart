@@ -1,5 +1,6 @@
 import 'package:classified_app/models/ads_model.dart';
 import 'package:classified_app/utilities/constants.dart';
+import 'package:classified_app/utilities/functions.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:classified_app/utilities/navigation/const_routes.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +83,7 @@ class ProductDetailScreen extends StatelessWidget {
                     color: Color.fromARGB(255, 58, 58, 58),
                   )),
                   TextSpan(
-                      text: data.created,
+                      text: Functions().timeAgoCalculator(data.created!),
                       style: const TextStyle(
                           fontSize: 16, color: Color.fromARGB(255, 58, 58, 58)))
                 ])),

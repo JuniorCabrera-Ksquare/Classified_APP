@@ -2,6 +2,7 @@ import 'package:classified_app/models/ads_model.dart';
 import 'package:classified_app/screens/custom_widgets/custom2.dart';
 import 'package:classified_app/services/ads_service.dart';
 import 'package:classified_app/utilities/constants.dart';
+import 'package:classified_app/utilities/functions.dart';
 import 'package:classified_app/utilities/navigation/const_routes.dart';
 import 'package:flutter/material.dart';
 
@@ -39,7 +40,8 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                       child: Custom2(
                         name: userAds[index].title!,
                         price: userAds[index].price!,
-                        created: userAds[index].created!,
+                        created: Functions()
+                            .timeAgoCalculator(userAds[index].created!),
                         image: userAds[index].images![0],
                       ),
                     );

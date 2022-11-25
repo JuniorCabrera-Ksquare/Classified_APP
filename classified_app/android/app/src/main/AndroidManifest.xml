@@ -11,6 +11,7 @@
             </intent>
     </queries>
    <application
+        android:requestLegacyExternalStorage="true"
         android:label="Classified"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">

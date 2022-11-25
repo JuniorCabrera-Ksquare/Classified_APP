@@ -58,7 +58,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 return GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(context, productDetailPage,
-                        arguments: fecthedAds[index]);
+                            arguments: fecthedAds[index])
+                        .then((value) {
+                      setState(() {});
+                    });
                   },
                   child: Custom1(
                     name: fecthedAds[index].title!,
@@ -80,7 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, createAdPage);
+          Navigator.pushNamed(context, createAdPage).then((value) {
+            setState(() {});
+          });
         },
         backgroundColor: Constants().appColor,
         child: const Icon(Icons.add_a_photo),

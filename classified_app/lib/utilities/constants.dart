@@ -15,5 +15,6 @@ class Constants {
   String adsUserEP = "/ads/user";
   String adsUserUpdateDeleteEP = "/ads/";
   //Picture Endpoints
-  String profilePicture = "/upload/profile";
+  String profilePictureEP = "/upload/profile";
+  String photosEP = "/upload/photos";
 }
